@@ -44,18 +44,6 @@ Ce projet m'a permis de comprendre et de mettre en pratique les concepts suivant
 * **Gestion des Erreurs :** Utilisation de `try...catch` pour gérer les cas où l'API ne répond pas ou si l'utilisateur est hors ligne.
 * **JSON :** Conversion des réponses brutes en objets JavaScript exploitables (`response.json()`).
 
----
-
-## 💻 Installation en local
-
-Si vous souhaitez tester ce code sur votre machine :
-
-1.  Clonez le dépôt :
-    ```bash
-    git clone [https://github.com/](https://github.com/)[TON-PSEUDO]/mon-dashboard-api.git
-    ```
-2.  Ouvrez le fichier `index.html` dans votre navigateur préféré.
-3.  Aucune installation (NPM, Node.js) n'est nécessaire, c'est du **Vanilla JS** pur.
 
 ---
 
