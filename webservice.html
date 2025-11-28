@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Dashboard d'APIs</title>
+    <style>
+        /* --- CSS : MISE EN PAGE --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 40px; }
+
+        /* Conteneur principal qui organise les cartes */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Style commun pour chaque "Carte" de service */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px; /* Largeur fixe pour l'esthétique */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+        .card h2 { font-size: 1.2rem; margin-top: 0; }
+        
+        /* Elements interactifs */
+        img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px; background-color: #eee; }
+        
+        input {
+            padding: 8px;
+            width: 80%;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        /* Couleurs spécifiques par projet */
+        .btn-dog { background-color: #3498db; }
+        .btn-dog:hover { background-color: #2980b9; }
+
+        .btn-age { background-color: #9b59b6; }
+        .btn-age:hover { background-color: #8e44ad; }
+
+        .btn-flight { background-color: #e67e22; }
+        .btn-flight:hover { background-color: #d35400; }
+
+        /* Zones de résultats */
+        .resultat-box {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: center;
+            min-height: 40px; /* Pour éviter que ça saute */
+        }
+
+        ul { list-style: none; padding: 0; text-align: left; font-size: 0.8rem; }
+        li { border-bottom: 1px solid #eee; padding: 5px 0; }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.8rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Mon Premier Dashboard d'APIs</h1>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h2>🐶 Générateur de Chiens</h2>
+            <p>Appel simple sans paramètres.</p>
+            <div id="img-container">
+                <img src="https://images.dog.ceo/breeds/retriever-golden/n02099601_10.jpg" alt="Chien">
+            </div>
+            <div class="resultat-box"></div>
+            <button class="btn-dog" onclick="chargerChien()">Voir un autre chien</button>
+        </div>
+
+        <div class="card">
+            <h2>🔮 Devin d'Âge</h2>
+            <p>Paramètre dynamique (URL).</p>
+            <input type="text" id="input-prenom" placeholder="Entrez un prénom...">
+            <button class="btn-age" onclick="devinerAge()">Deviner l'âge</button>
+            <div class="resultat-box" id="res-age">Résultat ici...</div>
+        </div>
+
+        <div class="card">
+            <h2>✈️ Radar Paris</h2>
+            <p>Données temps réel (OpenSky).</p>
+            <button class="btn-flight" onclick="scannerCiel()">Scanner le ciel</button>
+            <div class="resultat-box">
+                <ul id="liste-vols">
+                    <li>En attente de scan...</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        Projet réalisé pour apprendre les Web Services (API REST)
+    </footer>
+
+    <script>
+        // --- PROJET 1 : CHIENS ---
+        async function chargerChien() {
+            const imgContainer = document.querySelector('#img-container img');
+            const btn = document.querySelector('.btn-dog');
+            
+            btn.textContent = "Chargement...";
+            
+            try {
+                const reponse = await fetch("https://dog.ceo/api/breeds/image/random");
+                const data = await reponse.json();
+                imgContainer.src = data.message;
+            } catch (error) {
+                alert("Erreur chien : " + error);
+            }
+            
+            btn.textContent = "Voir un autre chien";
+        }
+
+        // --- PROJET 2 : AGE ---
+        async function devinerAge() {
+            const prenom = document.getElementById('input-prenom').value;
+            const resBox = document.getElementById('res-age');
+            
+            if(!prenom) { resBox.textContent = "Merci d'écrire un prénom !"; return; }
+
+            resBox.textContent = "Calcul...";
+
+            try {
+                // Utilisation des `backticks` pour insérer le prénom
+                const reponse = await fetch(`https://api.agify.io?name=${prenom}&country_id=FR`);
+                const data = await reponse.json();
+                
+                if(data.age) {
+                    resBox.textContent = `Âge moyen pour ${data.name} : ${data.age} ans.`;
+                } else {
+                    resBox.textContent = "Prénom inconnu de la base de données.";
+                }
+            } catch (error) {
+                resBox.textContent = "Erreur de connexion.";
+            }
+        }
+
+        // --- PROJET 3 : VOLS ---
+        async function scannerCiel() {
+            const liste = document.getElementById('liste-vols');
+            const btn = document.querySelector('.btn-flight');
+            
+            btn.textContent = "Radar en cours...";
+            liste.innerHTML = "<li>Connexion satellite...</li>";
+
+            // Coordonnées de Paris
+            const params = "?lamin=48.3&lomin=1.7&lamax=49.5&lomax=3.2";
+            
+            try {
+                const reponse = await fetch("https://opensky-network.org/api/states/all" + params);
+                const data = await reponse.json();
+
+                liste.innerHTML = ""; // Vider la liste
+
+                if (!data.states || data.states.length === 0) {
+                    liste.innerHTML = "<li>Aucun avion détecté.</li>";
+                } else {
+                    // On prend les 5 premiers seulement pour garder la carte petite
+                    const top5 = data.states.slice(0, 5);
+                    
+                    top5.forEach(avion => {
+                        const li = document.createElement('li');
+                        // Avion[1] est l'indicatif, Avion[2] le pays
+                        li.textContent = `✈️ ${avion[1] || 'Inconnu'} (${avion[2]})`;
+                        liste.appendChild(li);
+                    });
+                }
+
+            } catch (error) {
+                liste.innerHTML = "<li style='color:red'>Radar indisponible (Trop de requêtes).</li>";
+            }
+            
+            btn.textContent = "Re-scanner";
+        }
+    </script>
+</body>
+</html>
