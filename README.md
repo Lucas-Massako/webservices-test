@@ -8,8 +8,6 @@
 
 Ce projet est une application web interactive regroupant 3 mini-projets. L'objectif principal était d'apprendre à interagir avec des **API REST (Web Services)**, manipuler des données **JSON** et gérer l'asynchronisme en JavaScript.
 
-🔗 **[Voir la Démo en ligne (GitHub Pages)](https://[TON-PSEUDO].github.io/mon-dashboard-api/)**
-*(N'oublie pas de remplacer [TON-PSEUDO] par ton nom d'utilisateur GitHub)*
 
 ---
 
